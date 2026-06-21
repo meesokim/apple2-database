@@ -795,7 +795,48 @@ function showDetails(id) {
 
     screenshotImg.onerror = () => {
       screenshotImg.onerror = null;
-      screenshotContainer.style.display = 'none';
+      screenshotImg.style.display = 'none';
+      
+      let fallbackLink = screenshotContainer.querySelector('.screenshot-fallback-link');
+      if (!fallbackLink) {
+        fallbackLink = document.createElement('a');
+        fallbackLink.className = 'screenshot-fallback-link';
+        fallbackLink.target = '_blank';
+        fallbackLink.style.color = 'var(--accent-cyan)';
+        fallbackLink.style.textDecoration = 'none';
+        fallbackLink.style.fontWeight = '600';
+        fallbackLink.style.display = 'flex';
+        fallbackLink.style.flexDirection = 'column';
+        fallbackLink.style.alignItems = 'center';
+        fallbackLink.style.gap = '0.5rem';
+        fallbackLink.style.padding = '1.25rem 1rem';
+        fallbackLink.style.width = '100%';
+        fallbackLink.style.textAlign = 'center';
+        fallbackLink.style.border = '1px dashed var(--border-glow)';
+        fallbackLink.style.borderRadius = '8px';
+        fallbackLink.style.transition = 'all 0.3s ease';
+        fallbackLink.addEventListener('mouseenter', () => {
+          fallbackLink.style.borderColor = 'var(--accent-cyan)';
+          fallbackLink.style.boxShadow = '0 0 10px rgba(0, 240, 255, 0.1)';
+        });
+        fallbackLink.addEventListener('mouseleave', () => {
+          fallbackLink.style.borderColor = 'var(--border-glow)';
+          fallbackLink.style.boxShadow = 'none';
+        });
+        screenshotContainer.appendChild(fallbackLink);
+      }
+      fallbackLink.style.display = 'flex';
+      const searchTerms = `${item.system} "${item.title}" screenshot`;
+      const googleSearchUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(searchTerms)}`;
+      
+      fallbackLink.href = googleSearchUrl;
+      fallbackLink.innerHTML = `
+        <i class="fa-brands fa-google" style="font-size: 1.8rem; color: var(--accent-cyan);"></i>
+        <span style="font-size: 0.95rem;">Google 이미지에서 "${item.title}" 스크린샷 검색</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal; margin-top: 0.2rem;">
+          클릭하시면 구글 이미지에서 이 게임의 스크린샷을 검색해 줍니다.
+        </span>
+      `;
     };
   } else {
     // Fallback: Google Images search link
